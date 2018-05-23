@@ -24,13 +24,13 @@ router.post('/register', function(req, res) {
   })
   .catch((error) => {
     console.log(error);
-    res.redirect('/register');
+    res.render('register', {msg: error});
   });
 });
 
 // login
 router.get('/login', function(req, res) {
-  res.render('login');
+  res.render('login', {msg: ''});
 });
 
 router.post('/login',

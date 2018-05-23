@@ -7,12 +7,16 @@ module.exports = function(req, res, next) {
   models.Farmer
   .findOne({where: {username}})
   .then(farmer => {
-    let isCorrect = bcrypt.compareSync(password, farmer.password);
-    if (isCorrect) {
-      req.session.username = username;
-      next();
+    if (farmer) {
+      let isCorrect = bcrypt.compareSync(password, farmer.password);
+      if (isCorrect) {
+        req.session.username = username;
+        next();
+      } else {
+        res.render('login', {msg: 'Username / password wrong'});
+      }
     } else {
-      res.redirect('/');
+      res.render('login', {msg: 'Username / password wrong'});
     }
   });
 };
