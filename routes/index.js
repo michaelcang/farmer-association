@@ -5,7 +5,7 @@ const authenticator = require('./../middlewares/authentication');
 
 // homepage
 router.get('/', function(req, res) {
-  res.render('home');
+  res.render('home', {msg: ''});
 });
 
 // register

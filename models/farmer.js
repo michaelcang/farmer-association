@@ -60,7 +60,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   });
   Farmer.associate = function(models) {
-    // associations can be defined here
+    models.Farmer.belongsToMany(models.Crop, {through: 'FarmerCrop', foreignKey: 'farmerId'});
   };
   return Farmer;
 };
