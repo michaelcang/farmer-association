@@ -10,7 +10,9 @@ router.get('/', function(req, res) {
 
 // register
 router.get('/register', function(req, res) {
-  res.render('register');
+  res.render('register', {
+    msg: ''
+  });
 });
 
 router.post('/register', function(req, res) {
@@ -19,6 +21,10 @@ router.post('/register', function(req, res) {
   .create(req.body)
   .then(() => {
     res.redirect('/login');
+  })
+  .catch((error) => {
+    console.log(error);
+    res.redirect('/register');
   });
 });
 
@@ -28,9 +34,9 @@ router.get('/login', function(req, res) {
 });
 
 router.post('/login',
-	authenticator,
-	function(req, res) {
-		res.redirect('/');
-});
+  authenticator,
+  function(req, res) {
+    res.redirect('/farmers');
+  });
 
 module.exports = router;

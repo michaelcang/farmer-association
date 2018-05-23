@@ -16,7 +16,6 @@ app.use(session({
   saveUnitialized: true
 }));
 
-
 // root
 const rootRoutes = require('./routes');
 app.use('/', rootRoutes);

@@ -3,8 +3,41 @@ const bcrypt = require('bcrypt');
 
 module.exports = (sequelize, DataTypes) => {
   var Farmer = sequelize.define('Farmer', {
-    username: DataTypes.STRING,
-    password: DataTypes.STRING,
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: 'Please fill the username'
+        },
+        isUserUnique: (username, callback) => {
+          Farmer.findOne({
+            where: {username}
+          }).then(farmer => {
+            if (farmer) {
+              callback('Username is used');
+            } else {
+              callback();
+            }
+          });
+        }
+      }
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: 'Please fill the password'
+        },
+        min: {
+          args: 8,
+          msg: 'Password minimum 8 characters'
+        }
+      }
+    },
     name: DataTypes.STRING,
     address: DataTypes.STRING,
     area: DataTypes.INTEGER,
