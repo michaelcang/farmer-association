@@ -25,7 +25,7 @@
     <td>
       <ol>
         <% crops.forEach(crop => { %>
-        <li> <%= crop.name %> </li>
+        <li> <%= crop.name %> (<%= crop.FarmerCrop.size %> m<sup>2</sup>)</li>
         <% })%>
       </ol>
     </td>

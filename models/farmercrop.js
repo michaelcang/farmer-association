@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   var FarmerCrop = sequelize.define('FarmerCrop', {
     farmerId: DataTypes.INTEGER,
     cropId: DataTypes.INTEGER,
+    size: DataTypes.INTEGER,
     createdAt: {
       type: DataTypes.DATE,
       defaultValue: new Date()
