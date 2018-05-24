@@ -20,7 +20,7 @@ router.post('/register', function(req, res) {
   .Farmer
   .create(req.body)
   .then(() => {
-    res.redirect('/login');
+    res.redirect('/');
   })
   .catch((error) => {
     console.log(error);

@@ -1,6 +1,10 @@
 let getDate = function(dateString) {
   let day =  `${dateString.getDate()}/${dateString.getMonth() + 1}/${dateString.getFullYear()}`;
-  let time = `${dateString.getHours()}:${dateString.getMinutes()}`;
+  if (dateString.getMinutes() < 10) {
+    let time = `${dateString.getHours()}:0${dateString.getMinutes()}`;
+  } else {
+    let time = `${dateString.getHours()}:${dateString.getMinutes()}`;
+  }
   return day + ' ' + time;
 };
 
