@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: {
           name: 'cropId',
           unique: false}});
+    models.Crop.hasMany(models.FarmerCrop, {foreignKey: {name: 'cropId'}});
   };
   return Crop;
 };

@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {});
   FarmerCrop.associate = function(models) {
-    // associations can be defined here
+    models.FarmerCrop.belongsTo(models.Crop, {foreignKey: 'cropId'});
   };
   return FarmerCrop;
 };

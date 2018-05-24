@@ -6,10 +6,10 @@ const Op = sequelize.Op;
 
 // farmers homepage
 router.get('/', function(req, res) {
-  if (!req.session.username) {
+  if (req.session.username) {
     models
     .Farmer
-    .findAll()
+    .findAll({order: [['id', 'ASC']]})
     .then(farmers => {
       res.render('farmers/home', {farmers});
     })
@@ -114,11 +114,16 @@ router.post('/:id/edit-crops/:cropId', function(req, res) {
   .then(farmer => {
     models
     .FarmerCrop
-    .findOne({where: {farmerId, cropId}})
+    .findOne({
+      where: {farmerId, cropId},
+      include: [{model: models.Crop}]
+    })
     .then(farmerCrop => {
       let totalSizeChange = farmerCrop.size - newSize;
-      farmerCrop.size = newSize
+      let totalMoneyChange = farmerCrop.Crop.cost * totalSizeChange;
+      farmerCrop.size = newSize;
       farmer.area += totalSizeChange;
+      farmer.money += totalMoneyChange;
       if (farmer.area < 0) {
         farmer
         .getCrops()
@@ -128,8 +133,8 @@ router.post('/:id/edit-crops/:cropId', function(req, res) {
       } else {
         farmerCrop.save();
         farmer.save().then(() => {
-        	res.redirect(`/farmers/${farmerId}/edit-crops`);
-        })
+          res.redirect(`/farmers/${farmerId}/edit-crops`);
+        });
       }
     })
     .catch(error => {
@@ -144,18 +149,25 @@ router.post('/:id/add-crop', function(req, res) {
   let cropId = req.body.cropId;
   let newCropsArea = req.body.size;
   models
-    .Farmer
-    .findOne({where: {id: farmerId}})
-    .then(farmer => {
+  .Farmer
+  .findOne({where: {id: farmerId}})
+  .then(farmer => {
+    models
+    .Crop
+    .findOne({where: {id: cropId}})
+    .then(crop => {
       let newArea = farmer.area - newCropsArea;
+      let totalCost = crop.cost * newCropsArea;
       if (newArea >= 0) {
+        farmer.area = newArea;
+        farmer.money -= totalCost;
         models
         .FarmerCrop
         .create({
           farmerId, cropId, size: newCropsArea
         })
         .then(() => {
-          farmer.area = newArea;
+          farmer.save();
           res.redirect(`/farmers/${farmerId}/edit-crops`);
         })
         .catch(error => {
@@ -168,7 +180,8 @@ router.post('/:id/add-crop', function(req, res) {
           res.render('farmers/details', {farmer, crops, msg: 'You don\'t have sufficiand land'});
         });
       }
-    });
+    })
+  });
 });
 
 // farmer remove crops
@@ -177,9 +190,14 @@ router.post('/:id/remove-crop', function(req, res) {
   let cropId = req.body.cropId;
   models
   .FarmerCrop
-  .find({where: {farmerId, cropId}})
+  .find({
+    where: {farmerId, cropId},
+    include: [{model: models.Crop}]
+  })
   .then(farmerCrop => {
+    console.log('-----------', farmerCrop.Crop.cost);
     let addedArea = farmerCrop.size;
+    let totalAddMoney = farmerCrop.Crop.cost * addedArea;
     models
     .FarmerCrop
     .destroy({where: {farmerId, cropId}})
@@ -189,8 +207,11 @@ router.post('/:id/remove-crop', function(req, res) {
       .findOne({where: {id: farmerId}})
       .then(farmer => {
         farmer.area += addedArea;
-        farmer.save();
-        res.redirect(`/farmers/${farmerId}/edit-crops`);
+        farmer.money += totalAddMoney;
+        farmer.save()
+        .then(() => {
+          res.redirect(`/farmers/${farmerId}/edit-crops`);
+        });
       })
       .catch(error => {
         console.log(error);
