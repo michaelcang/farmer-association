@@ -104,10 +104,30 @@ router.get('/:id/edit-crops', function(req, res) {
 });
 
 // farmer edit crops by id
-router.post('/:id/edit-crops/:cropId', function(req, res) {
-  let farmerId = req.params.id; // req.body = {Crop.id = FarmerCrop.size}
+router.get('/:id/edit-crops/:cropId', function(req, res) {
+  let farmerId = req.params.id;
   let cropId = req.params.cropId;
-  let newSize = req.body[cropId];
+  models
+  .Farmer
+  .findOne({where: {id: farmerId}})
+  .then(farmer => {
+    models
+    .FarmerCrop
+    .findOne({
+      where: {farmerId, cropId},
+      include: [{model: models.Crop}]
+    })
+    .then(farmerCrop => {
+      let crop = farmerCrop.Crop;
+      res.render('farmers/edit-a-crop', {farmer, farmerCrop, crop});
+    });
+  });
+});
+
+router.post('/:id/edit-crops/:cropId', function(req, res) {
+  let farmerId = req.params.id;
+  let cropId = req.params.cropId;
+  let newSize = req.body.newSize;
   models
   .Farmer
   .findOne({where: {id: farmerId}})
@@ -199,9 +219,9 @@ router.post('/:id/add-crop', function(req, res) {
 });
 
 // farmer remove crops
-router.post('/:id/remove-crop', function(req, res) {
+router.get('/:id/remove-crop/:cropId', function(req, res) {
   let farmerId = req.params.id;
-  let cropId = req.body.cropId;
+  let cropId = req.params.cropId;
   models
   .FarmerCrop
   .find({
