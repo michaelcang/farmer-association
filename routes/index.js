@@ -39,4 +39,12 @@ router.post('/login',
     res.redirect('/farmers');
   });
 
+// temp crops table
+router.get('/crops', function(req, res) {
+  models.Crop.findAll()
+  .then(crops => {
+    res.render('crops', {crops});
+  });
+});
+
 module.exports = router;

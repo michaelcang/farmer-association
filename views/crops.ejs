@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>
+		Crops List
+	</title>
+	<link rel="stylesheet" href="">
+</head>
+<body>
+	<h1>Crop List</h1>
+	<table border=1>
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Crop Name</th>
+				<th>Price (m<sup>2</sup>)</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% crops.forEach(crop => { %>
+			<tr>
+				<td><%= crop.id %></td>
+				<td><%= crop.name %></td>
+				<td><%= crop.cost %></td>
+			</tr>
+			<% })%>
+		</tbody>
+	</table>
+</body>
+</html>
