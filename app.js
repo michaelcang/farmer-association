@@ -24,4 +24,7 @@ app.use('/', rootRoutes);
 const farmersRoutes = require('./routes/farmers');
 app.use('/farmers', farmersRoutes);
 
+// helper
+app.locals.getDate = require('./helpers/date');
+
 app.listen(3000, console.log('Listening on port 3000'));

@@ -10,13 +10,14 @@
 </head>
 <body>
 	<h1>All Farmers info</h1>
-	<table>
+	<table border=1>
 		<thead>
 			<tr>
 				<th>ID</th>
 				<th>Name</th>
 				<th>Address</th>
-				<th>Action</th>
+				<th>Details</th>
+				<th>History</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -25,7 +26,8 @@
 					<td><%= farmer.id %></td>
 					<td><%= farmer.name %></td>
 					<td><%= farmer.address %></td>
-					<td><a href="/farmers/<%= farmer.id %>">Show Details</a></td>
+					<td><a href="/farmers/<%= farmer.id %>">Current Details</a></td>
+					<td><a href="/farmers/<%= farmer.id %>/history">History</a></td>
 				</tr>
 			<% })%>
 		</tbody>

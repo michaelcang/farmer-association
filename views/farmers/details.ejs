@@ -3,11 +3,11 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Farmer <%= farmer.name %> Details</title>
+	<title><%= farmer.nameWithFarmer() %> Details</title>
 	<link rel="stylesheet" href="">
 </head>
 <body>
-  <h1>Farmer <%= farmer.name %>'s Details</h1>
+  <h1><%= farmer.nameWithFarmer() %>'s Details</h1>
   <%if (msg !== '') {%>
     <h4 style="color:red"> <%= msg %></h4>
   <% } %>

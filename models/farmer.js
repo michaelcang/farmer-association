@@ -50,15 +50,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       defaultValue: new Date()
     }
-  }, {
-    hooks: {
-      beforeCreate: (farmer, options) => {
-        let salt = bcrypt.genSaltSync(7);
-        let hash = bcrypt.hashSync(farmer.password, salt);
-        farmer.password = hash;
-      }
-    }
-  });
+  }, {});
   Farmer.associate = function(models) {
     models.Farmer
     .belongsToMany(
@@ -67,6 +59,15 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: {
           name: 'farmerId',
           unique: false}});
+    models.Farmer.hasMany(models.History, {foreignKey: {name: 'farmerId', unique: false}});
+  };
+  Farmer.beforeCreate((farmer, options) => {
+    let salt = bcrypt.genSaltSync(7);
+    let hash = bcrypt.hashSync(farmer.password, salt);
+    farmer.password = hash;
+  });
+  Farmer.prototype.nameWithFarmer = function(){
+    return 'Farmer ' + this.name;
   };
   return Farmer;
 };
