@@ -15,15 +15,30 @@
 	<h4>Empty Area: <%= farmer.area %> m<sup>2</sup></h4>
 	<h4>Money: Rp. <%= farmer.money.toLocaleString() %></h4>
 	<h4>Crops List:</h4>
-		<% let counter = 1; %>
-		<% farmerCrops.forEach(crop => { %>
-			<form action="/farmers/<%= farmer.id %>/edit-crops/<%= crop.id %>" method="post" accept-charset="utf-8">
-			  <%= counter %>. <%= crop.name %>: <input type="integer" name="<%= crop.id %>"
-			  value="<%= crop.FarmerCrop.size %>" size=5>m<sup>2</sup>	
-			  <input type="submit" value="Change">
-			</form>
-		<% counter++ %>
-		<% })%>
+	<table border=1>
+		<thead>
+			<tr>
+				<th>No.</th>
+				<th>Crop Name</th>
+				<th>Current Size</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% let counter = 1; %>
+			<% farmerCrops.forEach(crop => { %>
+				<tr>
+					<td><%= counter %></td>
+					<td><%= crop.name %></td>
+					<td><%= crop.FarmerCrop.size %> m<sup>2</sup></td>
+					<td><a href="/farmers/<%= farmer.id %>/edit-crops/<%= crop.id %>">Change | </a><a href="/farmers/<%= farmer.id %>/remove-crop/<%= crop.id %>" "email me">Remove</a></td>
+				</tr>
+			<% counter++ %>
+			<% })%>
+		</tbody>
+	</table>
+	<br>
+	<hr></hr>
 	<h4>Add New Crop</h4>
 	<form action="/farmers/<%= farmer.id %>/add-crop" method="post" accept-charset="utf-8">
 		<select name="cropId">
@@ -33,15 +48,6 @@
   	</select>
   	Size: <input type="integer" name="size" size=5> m<sup>2</sup></td>
   	<input type="submit" value="Add">
-	</form>
-	<h4>Remove Crop</h4>
-	<form action="/farmers/<%= farmer.id %>/remove-crop" method="post" accept-charset="utf-8">
-		<select name="cropId">
-			<% farmerCrops.forEach(crop => { %>
-			<option value="<%= crop.id %>"><%= crop.name %></option>
-			<% })%>
-  	</select>
-  	<input type="submit" value="Remove">
 	</form>
 	<br><br>
 	<a href="/farmers/<%= farmer.id %>" >Back</a>
