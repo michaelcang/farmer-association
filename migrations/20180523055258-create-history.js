@@ -11,6 +11,12 @@ module.exports = {
       farmerId: {
         type: Sequelize.INTEGER
       },
+      cropId: {
+        type: Sequelize.INTEGER
+      },
+      action: {
+        type: Sequelize.STRING
+      },
       date: {
         type: Sequelize.DATE
       },

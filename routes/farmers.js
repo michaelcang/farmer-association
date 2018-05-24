@@ -84,7 +84,7 @@ router.get('/:id/edit-crops', function(req, res) {
   .Farmer
   .findOne({where: {id}})
   .then(farmer => {
-    farmer.getCrops()
+    farmer.getCrops({order: [['id', 'ASC']]})
     .then(farmerCrops => {
       let oldCrop = [];
       for (let i = 0; i < farmerCrops.length; i++) {
@@ -229,7 +229,6 @@ router.get('/:id/remove-crop/:cropId', function(req, res) {
     include: [{model: models.Crop}]
   })
   .then(farmerCrop => {
-    console.log('-----------', farmerCrop.Crop.cost);
     let addedArea = farmerCrop.size;
     let totalAddMoney = farmerCrop.Crop.cost * addedArea;
     models
