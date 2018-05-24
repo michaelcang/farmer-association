@@ -128,7 +128,13 @@ router.post('/:id/edit-crops/:cropId', function(req, res) {
         farmer
         .getCrops()
         .then(crops => {
-          res.render('farmers/details', {farmer, crops, msg: 'You don\'t have sufficiand land'});
+          res.render('farmers/details', {farmer, crops, msg: 'You don\'t have sufficient land'});
+        });
+      } else if (farmer.money < 0) {
+        farmer
+        .getCrops()
+        .then(crops => {
+          res.render('farmers/details', {farmer, crops, msg: 'You don\'t have sufficient money'});
         });
       } else {
         farmerCrop.save();
@@ -161,26 +167,34 @@ router.post('/:id/add-crop', function(req, res) {
       if (newArea >= 0) {
         farmer.area = newArea;
         farmer.money -= totalCost;
-        models
-        .FarmerCrop
-        .create({
-          farmerId, cropId, size: newCropsArea
-        })
-        .then(() => {
-          farmer.save();
-          res.redirect(`/farmers/${farmerId}/edit-crops`);
-        })
-        .catch(error => {
-          console.log(error);
-        });
-      } else {
+        if (farmer.money >= 0) {
+          models
+          .FarmerCrop
+          .create({
+            farmerId, cropId, size: newCropsArea
+          })
+          .then(() => {
+            farmer.save();
+            res.redirect(`/farmers/${farmerId}/edit-crops`);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+        } else { // not enough money
+          farmer
+          .getCrops()
+          .then(crops => {
+            res.render('farmers/details', {farmer, crops, msg: 'You don\'t have sufficient money'});
+          });
+        }
+      } else { // not enough land
         farmer
         .getCrops()
         .then(crops => {
-          res.render('farmers/details', {farmer, crops, msg: 'You don\'t have sufficiand land'});
+          res.render('farmers/details', {farmer, crops, msg: 'You don\'t have sufficient land'});
         });
       }
-    })
+    });
   });
 });
 
