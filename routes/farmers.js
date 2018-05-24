@@ -6,7 +6,7 @@ const Op = sequelize.Op;
 
 // farmers homepage
 router.get('/', function(req, res) {
-  if (!req.session.username) {
+  if (req.session.username) {
     models
     .Farmer
     .findAll()
