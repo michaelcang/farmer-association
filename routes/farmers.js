@@ -310,4 +310,15 @@ router.get('/:id/history',
   });
 });
 
+// farmer delete
+router.get('/:id/delete',
+  checkUsername,
+  function(req, res) {
+    let id = req.params.id;
+    models.Farmer.destroy({where: {id}})
+    .then(() => {
+      res.redirect('/farmers');
+    });
+  });
+
 module.exports = router;

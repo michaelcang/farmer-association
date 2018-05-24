@@ -21,6 +21,7 @@
 				<th width="30%">Address</th>
 				<th>Details</th>
 				<th>History</th>
+				<th>Action</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -31,6 +32,7 @@
 					<td><%= farmer.address %></td>
 					<td><a href="/farmers/<%= farmer.id %>">Current Details</a></td>
 					<td><a href="/farmers/<%= farmer.id %>/history">History</a></td>
+					<td><a href="/farmers/<%= farmer.id %>/delete">Delete</a></td>
 				</tr>
 			<% })%>
 		</tbody>
