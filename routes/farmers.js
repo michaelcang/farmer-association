@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const models = require('./../models');
+const sequelize = require('sequelize');
+const Op = sequelize.Op;
 
 // farmers homepage
 router.get('/', function(req, res) {
@@ -10,6 +12,9 @@ router.get('/', function(req, res) {
     .findAll()
     .then(farmers => {
       res.render('farmers/home', {farmers});
+    })
+    .catch(error => {
+      console.log(error);
     });
   } else {
     res.render('home', {msg: 'You are not logged in'});
@@ -28,7 +33,10 @@ router.get('/:id', function(req, res) {
     farmer
     .getCrops()
     .then(crops => {
-      res.render('farmers/details', {farmer, crops});
+      res.render('farmers/details', {farmer, crops, msg: ''});
+    })
+    .catch(error => {
+      console.log(error);
     });
   });
 });
@@ -41,6 +49,9 @@ router.get('/:id/edit-data', function(req, res) {
   .findOne({where: {id}})
   .then(farmer => {
     res.render('farmers/edit-data', {farmer});
+  })
+  .catch(error => {
+    console.log(error);
   });
 });
 
@@ -57,8 +68,134 @@ router.post('/:id/edit-data', function(req, res) {
   .Farmer
   .update(updated, {
     where: {id}
-  }).then(() => {
+  })
+  .then(() => {
     res.redirect('/farmers');
+  })
+  .catch(error => {
+    console.log(error);
+  });
+});
+
+// farmer edit crops
+router.get('/:id/edit-crops', function(req, res) {
+  let id = req.params.id;
+  models
+  .Farmer
+  .findOne({where: {id}})
+  .then(farmer => {
+    farmer.getCrops()
+    .then(farmerCrops => {
+      let oldCrop = [];
+      for (let i = 0; i < farmerCrops.length; i++) {
+        oldCrop.push(farmerCrops[i].id);
+      }
+      models
+      .Crop
+      .findAll({where: {id: {[Op.notIn]: oldCrop}}})
+      .then(newCrops => {
+        res.render('farmers/edit-crops', {farmer, farmerCrops, newCrops, msg: ''});
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    });
+  });
+});
+
+// farmer edit crops by id
+router.post('/:id/edit-crops/:cropId', function(req, res) {
+  let farmerId = req.params.id; // req.body = {Crop.id = FarmerCrop.size}
+  let cropId = req.params.cropId;
+  let newSize = req.body[cropId];
+  models
+  .Farmer
+  .findOne({where: {id: farmerId}})
+  .then(farmer => {
+    models
+    .FarmerCrop
+    .findOne({where: {farmerId, cropId}})
+    .then(farmerCrop => {
+      let totalSizeChange = farmerCrop.size - newSize;
+      farmerCrop.size = newSize
+      farmer.area += totalSizeChange;
+      if (farmer.area < 0) {
+        farmer
+        .getCrops()
+        .then(crops => {
+          res.render('farmers/details', {farmer, crops, msg: 'You don\'t have sufficiand land'});
+        });
+      } else {
+        farmerCrop.save();
+        farmer.save().then(() => {
+        	res.redirect(`/farmers/${farmerId}/edit-crops`);
+        })
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  });
+});
+
+// farmer add crops
+router.post('/:id/add-crop', function(req, res) {
+  let farmerId = req.params.id;
+  let cropId = req.body.cropId;
+  let newCropsArea = req.body.size;
+  models
+    .Farmer
+    .findOne({where: {id: farmerId}})
+    .then(farmer => {
+      let newArea = farmer.area - newCropsArea;
+      if (newArea >= 0) {
+        models
+        .FarmerCrop
+        .create({
+          farmerId, cropId, size: newCropsArea
+        })
+        .then(() => {
+          farmer.area = newArea;
+          res.redirect(`/farmers/${farmerId}/edit-crops`);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      } else {
+        farmer
+        .getCrops()
+        .then(crops => {
+          res.render('farmers/details', {farmer, crops, msg: 'You don\'t have sufficiand land'});
+        });
+      }
+    });
+});
+
+// farmer remove crops
+router.post('/:id/remove-crop', function(req, res) {
+  let farmerId = req.params.id;
+  let cropId = req.body.cropId;
+  models
+  .FarmerCrop
+  .find({where: {farmerId, cropId}})
+  .then(farmerCrop => {
+    let addedArea = farmerCrop.size;
+    models
+    .FarmerCrop
+    .destroy({where: {farmerId, cropId}})
+    .then(() => {
+      models
+      .Farmer
+      .findOne({where: {id: farmerId}})
+      .then(farmer => {
+        farmer.area += addedArea;
+        farmer.save();
+        res.redirect(`/farmers/${farmerId}/edit-crops`);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    });
   });
 });
 

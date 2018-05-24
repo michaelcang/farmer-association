@@ -60,7 +60,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   });
   Farmer.associate = function(models) {
-    models.Farmer.belongsToMany(models.Crop, {through: 'FarmerCrop', foreignKey: 'farmerId'});
+    models.Farmer
+    .belongsToMany(
+      models.Crop, {
+        through: 'FarmerCrop',
+        foreignKey: {
+          name: 'farmerId',
+          unique: false}});
   };
   return Farmer;
 };

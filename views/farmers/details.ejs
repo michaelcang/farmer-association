@@ -7,6 +7,10 @@
 	<link rel="stylesheet" href="">
 </head>
 <body>
+  <h1>Farmer <%= farmer.name %>'s Details</h1>
+  <%if (msg !== '') {%>
+    <h4 style="color:red"> <%= msg %></h4>
+  <% } %>
 	<table border=1>
   <tr>
     <th>ID:</th>
@@ -35,3 +39,4 @@
 <h4><a href="/farmers/<%= farmer.id %>/edit-crops" "email me">change crops</a></h4>
 </body>
 </html>
+

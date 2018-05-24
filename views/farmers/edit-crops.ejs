@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Farmer <%= farmer.name %>'s Crops</title>
+	<link rel="stylesheet" href="">
+</head>
+<body>
+	<h1>Change your crops distribution</h1>
+	<%if (msg !== '') {%>
+		<h4 style="color:red"> <%= msg %></h4>
+	<% } %>
+	<h4>Name: <%= farmer.name %></h4>
+	<h4>Empty Area: <%= farmer.area %> m<sup>2</sup></h4>
+	<h4>Money: Rp. <%= farmer.money.toLocaleString() %></h4>
+	<h4>Crops List:</h4>
+		<% let counter = 1; %>
+		<% farmerCrops.forEach(crop => { %>
+			<form action="/farmers/<%= farmer.id %>/edit-crops/<%= crop.id %>" method="post" accept-charset="utf-8">
+			  <%= counter %>. <%= crop.name %>: <input type="integer" name="<%= crop.id %>"
+			  value="<%= crop.FarmerCrop.size %>" size=5>m<sup>2</sup>	
+			  <input type="submit" value="Change">
+			</form>
+		<% counter++ %>
+		<% })%>
+	<h4>Add New Crop</h4>
+	<form action="/farmers/<%= farmer.id %>/add-crop" method="post" accept-charset="utf-8">
+		<select name="cropId">
+			<% newCrops.forEach(crop => { %>
+			<option value="<%= crop.id %>"><%= crop.name %></option>
+			<% })%>
+  	</select>
+  	Size: <input type="integer" name="size" size=5> m<sup>2</sup></td>
+  	<input type="submit" value="Add">
+	</form>
+	<h4>Remove Crop</h4>
+	<form action="/farmers/<%= farmer.id %>/remove-crop" method="post" accept-charset="utf-8">
+		<select name="cropId">
+			<% farmerCrops.forEach(crop => { %>
+			<option value="<%= crop.id %>"><%= crop.name %></option>
+			<% })%>
+  	</select>
+  	<input type="submit" value="Remove">
+	</form>
+	<br><br>
+	<a href="/farmers/<%= farmer.id %>" >Back</a>
+</body>
+</html>
+
+

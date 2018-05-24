@@ -13,7 +13,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {});
   Crop.associate = function(models) {
-    models.Crop.belongsToMany(models.Farmer, {through: 'FarmerCrop', foreignKey: 'cropId'});
+    models.Crop.
+    belongsToMany(
+      models.Farmer, {
+        through: 'FarmerCrop',
+        foreignKey: {
+          name: 'cropId',
+          unique: false}});
   };
   return Crop;
 };
