@@ -3,6 +3,7 @@ const router = express.Router();
 const models = require('./../models');
 const sequelize = require('sequelize');
 const Op = sequelize.Op;
+const checkUsername = require('./../middlewares/checkUsername');
 
 // farmers homepage
 router.get('/', function(req, res) {
@@ -11,7 +12,7 @@ router.get('/', function(req, res) {
     .Farmer
     .findAll({order: [['id', 'ASC']]})
     .then(farmers => {
-      res.render('farmers/home', {farmers});
+      res.render('farmers/home', {farmers, msg: ''});
     })
     .catch(error => {
       console.log(error);
@@ -22,7 +23,9 @@ router.get('/', function(req, res) {
 });
 
 // farmers details
-router.get('/:id', function(req, res) {
+router.get('/:id',
+  checkUsername,
+  function(req, res) {
   let id = req.params.id;
   models
   .Farmer
@@ -292,7 +295,9 @@ router.get('/:id/remove-crop/:cropId', function(req, res) {
 });
 
 // farmer history
-router.get('/:id/history', function(req, res) {
+router.get('/:id/history',
+  checkUsername,
+  function(req, res) {
   let id = req.params.id;
   models
   .History

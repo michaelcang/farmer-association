@@ -10,6 +10,9 @@
 </head>
 <body>
 	<h1>All Farmers info</h1>
+	<%if (msg !== '') {%>
+    <h4 style="color:red"> <%= msg %></h4>
+  <% } %>
 	<table border=1 width="600">
 		<thead>
 			<tr>
