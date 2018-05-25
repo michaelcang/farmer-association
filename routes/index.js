@@ -39,4 +39,13 @@ router.post('/login',
     res.redirect('/farmers');
   });
 
+// crops list page
+router.get('/crop', function (req, res) {
+  res.render('crop', {msg: ''});
+});
+
+router.post('/crop', function (req, res) {
+  res.render('crop', {msg: ''});
+});
+
 module.exports = router;
