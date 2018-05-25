@@ -253,7 +253,4 @@ router.get('/:id/remove-crop/:cropId', function(req, res) {
   });
 });
 
-
-// 
-
 module.exports = router;

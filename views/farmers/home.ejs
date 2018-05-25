@@ -10,12 +10,17 @@
 </head>
 <body>
 	<h1>All Farmers info</h1>
-	<table>
+	<%if (msg !== '') {%>
+    <h4 style="color:red"> <%= msg %></h4>
+  <% } %>
+	<table border=1 width="600">
 		<thead>
 			<tr>
 				<th>ID</th>
 				<th>Name</th>
-				<th>Address</th>
+				<th width="30%">Address</th>
+				<th>Details</th>
+				<th>History</th>
 				<th>Action</th>
 			</tr>
 		</thead>
@@ -25,7 +30,9 @@
 					<td><%= farmer.id %></td>
 					<td><%= farmer.name %></td>
 					<td><%= farmer.address %></td>
-					<td><a href="/farmers/<%= farmer.id %>">Show Details</a></td>
+					<td><a href="/farmers/<%= farmer.id %>">Current Details</a></td>
+					<td><a href="/farmers/<%= farmer.id %>/history">History</a></td>
+					<td><a href="/farmers/<%= farmer.id %>/delete">Delete</a></td>
 				</tr>
 			<% })%>
 		</tbody>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>
+		Farmer History
+	</title>
+</head>
+<body>
+	<h1></h1>
+	<table border=1>
+		<thead>
+			<tr>
+				<th>Date</th>
+				<th>Farmer Name</th>
+				<th>Crop</th>
+				<th>Action</th>
+				<th>Area</th>
+				<th>Price</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% historyDetails.forEach(historyDetail => { %>
+			<tr>
+				<td><%= getDate(historyDetail.date) %></td>
+				<td><%= historyDetail.Farmer.name %></td>
+				<td><%= historyDetail.Crop.name %></td>
+				<td><%= historyDetail.action %></td>
+				<td><%= historyDetail.area %> m<sup>2</sup></td>
+				<td>Rp. <%= historyDetail.price %>/m<sup>2</sup></td>
+			</tr>
+			<% }) %>
+		</tbody>
+	</table>
+	<h4><a href="/farmers" "email me">back</a></h4>
+</body>
+</html>

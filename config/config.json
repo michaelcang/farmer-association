@@ -5,5 +5,12 @@
     "database": "farmer_association",
     "host": "127.0.0.1",
     "dialect": "postgres"
+  },
+  "production": {
+    "username": "uwppxaoapvocbf",
+    "password": "ef58f9353c6423a623636159e536ce52636e29b75a884eac5abb06dd47d1666b",
+    "database": "d3b494cbrfe9vs",
+    "host": "ec2-54-235-206-118.compute-1.amazonaws.com",
+    "dialect": "postgres"
   }
 }

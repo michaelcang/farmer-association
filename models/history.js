@@ -5,6 +5,8 @@ module.exports = (sequelize, DataTypes) => {
     cropId: DataTypes.INTEGER,
     action: DataTypes.STRING,
     date: DataTypes.DATE,
+    area: DataTypes.INTEGER,
+    price: DataTypes.INTEGER,
     createdAt: {
       type: DataTypes.DATE,
       defaultValue: new Date()
@@ -15,7 +17,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {});
   History.associate = function(models) {
-    // associations can be defined here
+    models.History.belongsTo(models.Farmer, {foreignKey: 'farmerId', unique: false});
+    models.History.belongsTo(models.Crop, {foreignKey: 'cropId', unique: false});
   };
   return History;
 };
