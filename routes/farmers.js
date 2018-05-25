@@ -3,6 +3,7 @@ const router = express.Router();
 const models = require('./../models');
 const sequelize = require('sequelize');
 const Op = sequelize.Op;
+const checkUsername = require('./../middlewares/checkUsername');
 
 // farmers homepage
 router.get('/', function(req, res) {
@@ -11,7 +12,7 @@ router.get('/', function(req, res) {
     .Farmer
     .findAll({order: [['id', 'ASC']]})
     .then(farmers => {
-      res.render('farmers/home', {farmers});
+      res.render('farmers/home', {farmers, msg: ''});
     })
     .catch(error => {
       console.log(error);
@@ -22,7 +23,9 @@ router.get('/', function(req, res) {
 });
 
 // farmers details
-router.get('/:id', function(req, res) {
+router.get('/:id',
+  checkUsername,
+  function(req, res) {
   let id = req.params.id;
   models
   .Farmer
@@ -144,6 +147,14 @@ router.post('/:id/edit-crops/:cropId', function(req, res) {
       farmerCrop.size = newSize;
       farmer.area += totalSizeChange;
       farmer.money += totalMoneyChange;
+      let action = 'Test';
+      if (totalSizeChange < 0) {
+        action = 'Add';
+      } else if (totalSizeChange > 0) {
+        action = 'Reduce';
+      } else {
+        action = 'No change';
+      }
       if (farmer.area < 0) {
         farmer
         .getCrops()
@@ -159,7 +170,17 @@ router.post('/:id/edit-crops/:cropId', function(req, res) {
       } else {
         farmerCrop.save();
         farmer.save().then(() => {
-          res.redirect(`/farmers/${farmerId}/edit-crops`);
+          models.History.create({
+              farmerId,
+              cropId,
+              date: new Date(),
+              action,
+              price: farmerCrop.Crop.cost,
+              area: Math.abs(totalSizeChange)
+            })
+            .then(() => {
+              res.redirect(`/farmers/${farmerId}/edit-crops`);
+            });
         });
       }
     })
@@ -195,7 +216,17 @@ router.post('/:id/add-crop', function(req, res) {
           })
           .then(() => {
             farmer.save();
-            res.redirect(`/farmers/${farmerId}/edit-crops`);
+            models.History.create({
+              farmerId,
+              cropId,
+              date: new Date(),
+              action: 'New',
+              price: crop.cost,
+              area: Math.abs(newCropsArea)
+            })
+            .then(() => {
+              res.redirect(`/farmers/${farmerId}/edit-crops`);
+            });
           })
           .catch(error => {
             console.log(error);
@@ -243,7 +274,17 @@ router.get('/:id/remove-crop/:cropId', function(req, res) {
         farmer.money += totalAddMoney;
         farmer.save()
         .then(() => {
-          res.redirect(`/farmers/${farmerId}/edit-crops`);
+          models.History.create({
+            farmerId,
+            cropId,
+            date: new Date(),
+            action: 'Remove',
+            price: farmerCrop.Crop.cost,
+            area: Math.abs(addedArea)
+          })
+          .then(() => {
+            res.redirect(`/farmers/${farmerId}/edit-crops`);
+          });
         });
       })
       .catch(error => {
@@ -252,5 +293,32 @@ router.get('/:id/remove-crop/:cropId', function(req, res) {
     });
   });
 });
+
+// farmer history
+router.get('/:id/history',
+  checkUsername,
+  function(req, res) {
+  let id = req.params.id;
+  models
+  .History
+  .findAll({
+    where: {farmerId: id},
+    include: [{model: models.Crop},{model: models.Farmer}]
+  })
+  .then(historyDetails => {
+    res.render('farmers/history', {historyDetails});
+  });
+});
+
+// farmer delete
+router.get('/:id/delete',
+  checkUsername,
+  function(req, res) {
+    let id = req.params.id;
+    models.Farmer.destroy({where: {id}})
+    .then(() => {
+      res.redirect('/farmers');
+    });
+  });
 
 module.exports = router;
