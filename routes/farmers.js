@@ -23,7 +23,9 @@ router.get('/', function(req, res) {
 });
 
 // farmers details
-router.get('/:id', function(req, res) {
+router.get('/:id',
+  checkUsername,
+  function(req, res) {
   let id = req.params.id;
   models
   .Farmer
