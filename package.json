@@ -17,5 +17,13 @@
     "express-session": "^1.15.6",
     "pg": "^7.4.3",
     "sequelize": "^4.37.8"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michaelcang/farmer-association.git"
+  },
+  "bugs": {
+    "url": "https://github.com/michaelcang/farmer-association/issues"
+  },
+  "homepage": "https://github.com/michaelcang/farmer-association#readme"
 }

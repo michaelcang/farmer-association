@@ -24,6 +24,10 @@ app.use('/', rootRoutes);
 const farmersRoutes = require('./routes/farmers');
 app.use('/farmers', farmersRoutes);
 
+// crops
+const cropsRoutes = require('./routes/crops');
+app.use('/crops', cropsRoutes);
+
 // helper
 app.locals.getDate = require('./helpers/date');
 

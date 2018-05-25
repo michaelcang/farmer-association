@@ -4,12 +4,12 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>
-		Crops List
+		All Crops Available For Sale 
 	</title>
 	<link rel="stylesheet" href="">
 </head>
 <body>
-	<h1>Crop List</h1>
+	<h1>Crops currently available for sale :</h1>
 	<table border=1>
 		<thead>
 			<tr>
@@ -20,13 +20,14 @@
 		</thead>
 		<tbody>
 			<% crops.forEach(crop => { %>
-			<tr>
-				<td><%= crop.id %></td>
-				<td><%= crop.name %></td>
-				<td><%= crop.cost %></td>
-			</tr>
+				<tr>
+					<td><%= crop.id %></td>
+					<td><%= crop.name %></td>
+					<td><%= crop.cost %></td>
+				</tr>
 			<% })%>
 		</tbody>
 	</table>
+	<h4><a href="/">back</a></h4>
 </body>
 </html>
