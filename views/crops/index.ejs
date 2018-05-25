@@ -15,7 +15,9 @@
 			<tr>
 				<th>ID</th>
 				<th>Crop Name</th>
-				<th>Price (m<sup>2</sup>)</th>
+				<th>Cost (m<sup>2</sup>)</th>
+				<th>DeleteCrop</th>
+				<th>AlterPrice</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -24,10 +26,13 @@
 					<td><%= crop.id %></td>
 					<td><%= crop.name %></td>
 					<td><%= crop.cost %></td>
+					<td><a href="/crops/<%= crop.id %>/delete">Delete</a></td>
+					<td><a href="/crops/<%= crop.id %>/editprice">SubmitNewPrice</a></td>
 				</tr>
 			<% })%>
 		</tbody>
 	</table>
+	<h4><a href="/crops/addcrop">Add a NewCrop</a></h>
 	<h4><a href="/">back</a></h4>
 </body>
 </html>

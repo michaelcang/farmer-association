@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>
+		Edit Crops Price
+	</title>
+	<link rel="stylesheet" href="">
+</head>
+<body>
+	<h3>Edit Crops Price Below</h3>
+	<form action="/crops/<%= crop.id %>/editprice" method="post">
+ 		NewPrice: <input type="integer" name="cost" value="<%= crop.price %>"><br>
+		<input type="submit">
+	</form>
+</body>
+</html>
